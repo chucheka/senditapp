@@ -1,4 +1,4 @@
-package com.neulogics.senditapp.model;
+package com.neulogics.senditapp.models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

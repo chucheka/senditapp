@@ -1,4 +1,4 @@
-package com.neulogics.senditapp.model;
+package com.neulogics.senditapp.models;
 
 public enum ERole {
 	ROLE_USER,
