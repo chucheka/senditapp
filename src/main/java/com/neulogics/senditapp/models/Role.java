@@ -1,5 +1,6 @@
 package com.neulogics.senditapp.models;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,6 +16,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "roles")
 public class Role {
+	
+	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -31,6 +35,8 @@ public class Role {
 		this.name = name;
 	}
 
+	  
+	
 	public Integer getId() {
 		return id;
 	}
