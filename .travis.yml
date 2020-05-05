@@ -2,7 +2,6 @@ language: java
 jdk:
   - oraclejdk13
 env:
-  - MAVEN_VERSION=3.2.5
   - MAVEN_VERSION=3.3.9
 install:
   - "mvn -N io.takari:maven:wrapper -Dmaven=${MAVEN_VERSION}"
