@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.neulogics.senditapp.audit.AuditModel;
+//import com.neulogics.senditapp.audit.AuditModel;
 
 @Entity
 @Table(	name = "users", 
@@ -20,12 +20,7 @@ import com.neulogics.senditapp.audit.AuditModel;
 			@UniqueConstraint(columnNames = "username"),
 			@UniqueConstraint(columnNames = "email") 
 		})
-public class User extends AuditModel{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
+public class User{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
