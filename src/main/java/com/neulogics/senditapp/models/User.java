@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.neulogics.senditapp.audit.AuditModel;
 
 @Entity
-@Table(	name = "users", 
+@Table(	name = "users", schema = "SYS",
 		uniqueConstraints = { 
 			@UniqueConstraint(columnNames = "username"),
 			@UniqueConstraint(columnNames = "email") 
