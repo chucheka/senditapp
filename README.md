@@ -8,7 +8,7 @@ Development
 https://github.com/ucheka22/senditapp.git
 
 ## API Documentation
-https://mysenditapp.herokuapp.com/api/v1/
+https://documenter.getpostman.com/view/11203891/SzfAz77C?version=latest
 
 ## UI On gh-pages
 Not Ready Yet..
