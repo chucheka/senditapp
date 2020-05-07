@@ -69,7 +69,6 @@ public class ParcelController {
 		
 		try {
 			Parcel parcel = service.createParcelOrder(newParcel, req);
-		
 			return new ResponseEntity<Parcel>(parcel,HttpStatus.CREATED);
 		}catch(Exception exc) {
 			return new ResponseEntity<>(null,HttpStatus.EXPECTATION_FAILED);
