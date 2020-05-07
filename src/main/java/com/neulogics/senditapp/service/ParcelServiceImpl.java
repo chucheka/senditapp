@@ -34,13 +34,16 @@ public class ParcelServiceImpl {
 
 	// GET/api/v1/parcels
 	
-		public List<Parcel> getAllParcels() throws Exception{
-		
+		public List<Parcel> getAllParcels() throws ParcelNotFoundException, Exception{
+			List<Parcel> allParcels;
 			try {
-				List<Parcel> allParcels = 	repository.findAll();
+				allParcels = 	repository.findAll();
+				if(allParcels.isEmpty()) {
+					throw new ParcelNotFoundException("No parcels Found");
+				}
 				return allParcels;
 			}catch(Exception exc) {
-				throw new Exception("No parcels found");
+				throw new Exception(exc.getMessage());
 			}
 		
 		}
