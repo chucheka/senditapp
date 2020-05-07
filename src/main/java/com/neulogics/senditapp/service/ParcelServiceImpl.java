@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.neulogics.senditapp.exception.ActionNotAllowedException;
 import com.neulogics.senditapp.exception.ParcelNotFoundException;
+import com.neulogics.senditapp.exception.UserNotFoundException;
 import com.neulogics.senditapp.models.Parcel;
 import com.neulogics.senditapp.models.User;
 import com.neulogics.senditapp.respository.ParcelRepository;
@@ -37,7 +39,7 @@ public class ParcelServiceImpl {
 		public List<Parcel> getAllParcels() throws ParcelNotFoundException, Exception{
 			List<Parcel> allParcels;
 			try {
-				allParcels = 	repository.findAll();
+				allParcels = repository.findAll();
 				if(allParcels.isEmpty()) {
 					throw new ParcelNotFoundException("No parcels Found");
 				}
@@ -63,7 +65,7 @@ public class ParcelServiceImpl {
 		
 		// POST/api/v1/parcels
 		
-		public Parcel createParcelOrder(Parcel newParcel,HttpServletRequest req) throws Exception {
+public Parcel createParcelOrder(Parcel newParcel,HttpServletRequest req) throws Exception {
 		
 			User user =  userUtil.getCurrentUser(req);
 			 newParcel.setUser(user);
@@ -76,37 +78,41 @@ public class ParcelServiceImpl {
 				return parcel;
 				
 			}catch(Exception exc) {
-				throw new Exception("Order creation failed internally");
+				throw new Exception("Internal Server Error");
 			}
  }
 		
 		// GET/api/v1/users/{userId}/parcels
 		
-		public List<Parcel> getParcelsByUserId(long userId) throws Exception{
+public List<Parcel> getParcelsByUserId(long userId) throws UserNotFoundException{
 				//Find the user by user id
-			User user = userRepo.findById(userId).orElseThrow(()->new Exception("User does not exist"));
+	User user = userRepo.findById(userId).orElseThrow(()->new UserNotFoundException("User does not exist"));
 				//Get the  parcels for user
-		
-			return user.getParcels();
+	return user.getParcels();
  }
 		
 		// PUT/api/v1/parcels/{parcelId}/status
 		
-		public Parcel updateParcelStatus(Parcel parcelForUpdate,long parcelId) throws Exception{
+		public Parcel updateParcelStatus(Parcel parcelForUpdate,long parcelId) throws ActionNotAllowedException{
 			Parcel parcel = repository.findById(parcelId)
 					.orElseThrow(()->new ParcelNotFoundException("Parcel to cancel not found!!"));
 			if("delivered".equalsIgnoreCase(parcel.getStatus())) {
-				throw new Exception("Cannot changed status of parcel already delivered");
+				throw new ActionNotAllowedException("Cannot changed status of parcel already delivered");
 			}
 			// Update the status
             parcel.setStatus(parcelForUpdate.getStatus());
             
             Parcel updatedParcel = repository.save(parcel);
             
-//            if(updatedParcel != null) {
-//            	
-//            	emailService.sendEmail("ryanucheka@gmail.com", "UPDATES FROM SENDIT COURIER", "Your parcel has been " +updatedParcel.getStatus());
-//            }
+            if(updatedParcel != null) {
+            	
+            	
+//            	try {
+//            		emailService.sendEmail("ryanucheka@gmail.com", "UPDATES FROM SENDIT COURIER", "Your parcel has been " +updatedParcel.getStatus());
+//            	}catch(EmailException exc) {
+//            		throw new EmailException(exc.getMessage());
+//            	}	
+            }
 			return updatedParcel;
  }
 		

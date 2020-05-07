@@ -1,16 +1,17 @@
 package com.neulogics.senditapp.exception;
 
-public class ParcelErrorResponse {
+public class ErrorResponse {
 
 	private int status;
 	private String message;
 	private long timeStamp;
 	
-	public ParcelErrorResponse() {
-		
+	
+	public ErrorResponse() {
+		super();
 	}
 
-	public ParcelErrorResponse(int status, String message, long timeStamp) {
+	public ErrorResponse(int status, String message, long timeStamp) {
 		super();
 		this.status = status;
 		this.message = message;
@@ -43,4 +44,3 @@ public class ParcelErrorResponse {
 	
 	
 }
-

@@ -15,12 +15,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler({AccessDeniedException.class})
-	public ResponseEntity<ParcelErrorResponse> handleAccessDeniedException(Exception ex,WebRequest req){
-		ParcelErrorResponse error = new ParcelErrorResponse();
+	public ResponseEntity<ErrorResponse> handleAccessDeniedException(Exception ex,WebRequest req){
+		ErrorResponse error = new ErrorResponse();
 				error.setStatus(HttpStatus.FORBIDDEN.value());
 				error.setMessage(ex.getMessage());
 				error.setTimeStamp(System.currentTimeMillis());
-				return new ResponseEntity<ParcelErrorResponse>(error,HttpStatus.FORBIDDEN);	
+				return new ResponseEntity<ErrorResponse>(error,HttpStatus.FORBIDDEN);	
 						
 	}
 }

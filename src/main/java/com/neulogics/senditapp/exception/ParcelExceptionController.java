@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ParcelExceptionController {
 
 	@ExceptionHandler
-	public ResponseEntity<ParcelErrorResponse> handleException(ParcelNotFoundException exc){
-		ParcelErrorResponse error = new ParcelErrorResponse();
+	public ResponseEntity<ErrorResponse> handleException(ParcelNotFoundException exc){
+	ErrorResponse error = new ErrorResponse();
 		
 		error.setStatus(HttpStatus.NOT_FOUND.value());
 		error.setMessage(exc.getMessage());
@@ -22,10 +22,20 @@ public class ParcelExceptionController {
 	}
 	
 	@ExceptionHandler
-	public ResponseEntity<ParcelErrorResponse> handleException(Exception exc){
-		ParcelErrorResponse error = new ParcelErrorResponse();
+	public ResponseEntity<ErrorResponse> handleException(ActionNotAllowedException exc){
+		ErrorResponse error = new ErrorResponse();
 		
-		error.setStatus(HttpStatus.BAD_REQUEST.value());
+		error.setStatus(HttpStatus.NOT_ACCEPTABLE.value());
+		error.setMessage(exc.getMessage());
+		error.setTimeStamp(System.currentTimeMillis());
+		return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ErrorResponse> handleException(Exception exc){
+		ErrorResponse error = new ErrorResponse();
+		
+		error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 		error.setMessage(exc.getMessage());
 		error.setTimeStamp(System.currentTimeMillis());
 		
