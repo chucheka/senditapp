@@ -1,17 +1,17 @@
 #SendIT
 > SendIT is a courier service that helps users deliver parcels to different destinations. SendIT provides courier quotes based on weight categories.
 
-## Status
+### Stage
 Development
 
 ## GitHub Project Management Board
-https://github.com/ucheka22/sendIt.git
+https://github.com/ucheka22/senditapp.git
 
 ## API Documentation
-https://teamwork-lite.herokuapp.com/api-docs/
+https://mysenditapp.herokuapp.com/api/v1/
 
 ## UI On gh-pages
-https://ucheka22.github.io/sendit_UI/
+Not Ready Yet..
 
 ## Table of Content
  * [Getting Started](#getting-started)
@@ -32,13 +32,13 @@ https://ucheka22.github.io/sendit_UI/
 ### Installation
 1. Clone this repository into your local machine:
 ```
-e.g git clone https://github.com/ucheka22/sendIT.git
+e.g git clone https://github.com/ucheka22/senditapp.git
 ```
 
 4. Install postman to test all endpoints on port 8080.
 
 ### BaseURI
-Use the baseURI  ```http://localhost:8080/api/v1```.
+Use the baseURI  ```https://mysenditapp.herokuapp.com/api/v1```.
 
 ### API End Points Test Using Postman
 
