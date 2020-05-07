@@ -17,7 +17,7 @@ import com.neulogics.senditapp.audit.AuditModel;
 
 
 @Entity
-@Table(name="parcels", schema = "SYS")
+@Table(name="parcels")
 public class Parcel extends AuditModel{
 
 	/**
