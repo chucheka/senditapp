@@ -103,6 +103,9 @@ public List<Parcel> getParcelsByUserId(long userId) throws UserNotFoundException
 			if("delivered".equalsIgnoreCase(parcel.getStatus())) {
 				throw new ActionNotAllowedException("Cannot changed status of parcel already delivered");
 			}
+			if(parcelForUpdate.getStatus().equalsIgnoreCase("delivered")) {
+				parcel.setPresentLocation(parcel.getDestination());
+			}
 			// Update the status
             parcel.setStatus(parcelForUpdate.getStatus());
             
@@ -177,9 +180,8 @@ public List<Parcel> getParcelsByUserId(long userId) throws UserNotFoundException
 	            if("delivered".equalsIgnoreCase(updatedParcel.getStatus())) {
 	            	throw new ActionNotAllowedException("Cannot change destination of already delivered parcel");
 	            }
-	            // Update the parcel destination
+	            
 	            updatedParcel.setDestination(parcelForUpdate.getDestination());
-	            updatedParcel.setPresentLocation(parcelForUpdate.getDestination());
 	            updatedParcel = repository.save(updatedParcel);
 	            if(updatedParcel != null) {
 	            	emailService.sendEmail("ryanucheka@gmail.com", "UPDATES FROM SENDIT COURIER", "Parcel currently at  " +updatedParcel.getDestination());
