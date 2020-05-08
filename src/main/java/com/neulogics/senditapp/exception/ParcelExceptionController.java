@@ -1,5 +1,7 @@
 package com.neulogics.senditapp.exception;
 
+import javax.mail.SendFailedException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -25,6 +27,7 @@ public class ParcelExceptionController {
 	public ResponseEntity<ErrorResponse> handleException(ActionNotAllowedException exc){
 		ErrorResponse error = new ErrorResponse();
 		
+		
 		error.setStatus(HttpStatus.NOT_ACCEPTABLE.value());
 		error.setMessage(exc.getMessage());
 		error.setTimeStamp(System.currentTimeMillis());
@@ -38,7 +41,16 @@ public class ParcelExceptionController {
 		error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 		error.setMessage(exc.getMessage());
 		error.setTimeStamp(System.currentTimeMillis());
+		return new ResponseEntity<>(error,HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@ExceptionHandler
+	public ResponseEntity<ErrorResponse> handleException(SendFailedException exc){
+		ErrorResponse error = new ErrorResponse();
 		
+		error.setStatus(HttpStatus.BAD_REQUEST.value());
+		error.setMessage(exc.getMessage());
+		error.setTimeStamp(System.currentTimeMillis());
 		return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
 	}
 }

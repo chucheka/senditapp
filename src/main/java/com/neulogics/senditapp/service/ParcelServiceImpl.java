@@ -5,6 +5,7 @@ package com.neulogics.senditapp.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.mail.SendFailedException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,8 @@ public class ParcelServiceImpl {
 	@Autowired
 	private UserUtil userUtil;
 	
-//	@Autowired
-//	private EmailService emailService;
+	@Autowired
+	private EmailService emailService;
 
 	// GET/api/v1/parcels
 	
@@ -52,7 +53,7 @@ public class ParcelServiceImpl {
 		
 		//	GET/api/v1/parcels/{parcelId}
 		
-		public Parcel getParceById(long parcelId) throws Exception{
+		public Parcel getParceById(long parcelId) throws ParcelNotFoundException, Exception{
 			
 			Optional<Parcel> parcel = repository.findById(parcelId);
 			
@@ -72,28 +73,31 @@ public Parcel createParcelOrder(Parcel newParcel,HttpServletRequest req) throws 
 			 newParcel.setPresentLocation(newParcel.getPickupLocation());
 			
 			try {
-				
 				Parcel parcel = repository.save(newParcel);
-				
 				return parcel;
-				
 			}catch(Exception exc) {
-				throw new Exception("Internal Server Error");
+				throw new Exception("Internal Server Error \n"+exc.getCause());
 			}
  }
 		
 		// GET/api/v1/users/{userId}/parcels
 		
-public List<Parcel> getParcelsByUserId(long userId) throws UserNotFoundException{
+public List<Parcel> getParcelsByUserId(long userId) throws UserNotFoundException,ParcelNotFoundException{
 				//Find the user by user id
 	User user = userRepo.findById(userId).orElseThrow(()->new UserNotFoundException("User does not exist"));
-				//Get the  parcels for user
-	return user.getParcels();
+				
+	List<Parcel> userParcels = user.getParcels();
+	
+	if(userParcels.isEmpty()) {
+		throw new ParcelNotFoundException("No parcel order(s) for this user");
+	}
+	
+	return userParcels;
  }
 		
 		// PUT/api/v1/parcels/{parcelId}/status
 		
-		public Parcel updateParcelStatus(Parcel parcelForUpdate,long parcelId) throws ActionNotAllowedException{
+		public Parcel updateParcelStatus(Parcel parcelForUpdate,long parcelId) throws SendFailedException,ActionNotAllowedException,Exception{
 			Parcel parcel = repository.findById(parcelId)
 					.orElseThrow(()->new ParcelNotFoundException("Parcel to cancel not found!!"));
 			if("delivered".equalsIgnoreCase(parcel.getStatus())) {
@@ -106,60 +110,65 @@ public List<Parcel> getParcelsByUserId(long userId) throws UserNotFoundException
             
             if(updatedParcel != null) {
             	
-            	
-//            	try {
-//            		emailService.sendEmail("ryanucheka@gmail.com", "UPDATES FROM SENDIT COURIER", "Your parcel has been " +updatedParcel.getStatus());
-//            	}catch(EmailException exc) {
-//            		throw new EmailException(exc.getMessage());
-//            	}	
+            	User user = updatedParcel.getUser();
+                emailService.sendEmail(user.getEmail(), "UPDATES FROM SENDIT COURIER", "Parcel Status: " +updatedParcel.getStatus());
             }
 			return updatedParcel;
  }
 		
 		// PUT/api/v1/parcels/{parcelId}/cancel
 		
-		public Parcel cancelParcelOrder( long parcelId, HttpServletRequest req) throws Exception  {
+		public Parcel cancelParcelOrder( long parcelId, HttpServletRequest req) throws ActionNotAllowedException, Exception  {
 			Parcel dbParcel = repository.findById(parcelId)
 					.orElseThrow(()->new ParcelNotFoundException("Parcel to cancel not found!!"));
 			User authUser = userUtil.getCurrentUser(req);
 			User parcelOwner = dbParcel.getUser();
 			
 			if(!parcelOwner.equals(authUser)) {
-				throw new Exception("Only user who created parcel order can cancel order");
+				throw new ActionNotAllowedException("Only user who created parcel order can cancel order");
 		}
 			
 			if("delivered".equals(dbParcel.getStatus())) {
-				throw new Exception("Can not cancel parcel order that has been delivered");
+				throw new ActionNotAllowedException("Can not cancel parcel order that has been delivered");
 			}else {
-			dbParcel.setStatus("cancelled");
-			return repository.save(dbParcel);
+				
+				try {
+					dbParcel.setStatus("cancelled");
+					return repository.save(dbParcel);
+					
+				}catch(Exception exc) {
+					throw new Exception("Internal Server Error \n"+exc.getCause());
+				}
 		}
 		
  }
 	
 	// PUT/api/v1/parcels/{parcelId}present_location
 		
-	public Parcel updateParcelLocation(Parcel parcelForUpdate,long parcelId) throws Exception{
-		//Fetch the parcel with particular Id
-		Optional<Parcel> parcel = repository.findById(parcelId);
-		//Check if parcel exist
-		if(parcel.isPresent()) 
-        {
-            Parcel updatedParcel = parcel.get();
-            // Update the parcel location
-            updatedParcel.setPresentLocation(parcelForUpdate.getPresentLocation());
-            updatedParcel = repository.save(updatedParcel);
-            return updatedParcel;
-        } else {
-        	throw new ParcelNotFoundException("Parcel to change location doen not exist");
-        }
+	public Parcel updateParcelLocation(Parcel parcelForUpdate,long parcelId) throws ParcelNotFoundException,Exception{
+		try {
+			//Fetch the parcel with particular Id
+			Optional<Parcel> parcel = repository.findById(parcelId);
+			//Check if parcel exist
+			if(parcel.isPresent()) 
+	        {
+	            Parcel updatedParcel = parcel.get();
+	            updatedParcel.setPresentLocation(parcelForUpdate.getPresentLocation());
+	            updatedParcel = repository.save(updatedParcel);
+	            return updatedParcel;
+	        } else {
+	        	throw new ParcelNotFoundException("Parcel to change location doen not exist");
+	        }
+		}catch(Exception exc) {
+			throw new Exception("Internal Server Error \n"+exc.getCause());
+		}
 		
 	}
 	
 	
 	//PUT/api/v1/parcels/{parcelId}/destination
 	
-	public Parcel updateParcelDestination(Parcel parcelForUpdate,long parcelId) throws Exception{
+	public Parcel updateParcelDestination(Parcel parcelForUpdate,long parcelId) throws SendFailedException,Exception{
 		
 		//Fetch the parcel with particular Id
 		Optional<Parcel> parcel = repository.findById(parcelId);
@@ -169,14 +178,14 @@ public List<Parcel> getParcelsByUserId(long userId) throws UserNotFoundException
 	        {
 	            Parcel updatedParcel = parcel.get();
 	            if("delivered".equalsIgnoreCase(updatedParcel.getStatus())) {
-	            	throw new Exception("Cannot change destination of already delivered parcel");
+	            	throw new ActionNotAllowedException("Cannot change destination of already delivered parcel");
 	            }
 	            // Update the parcel destination
 	            updatedParcel.setDestination(parcelForUpdate.getDestination());
 	            updatedParcel = repository.save(updatedParcel);
-//	            if(updatedParcel != null) {
-//	            	emailService.sendEmail("ryanucheka@gmail.com", "UPDATES FROM SENDIT COURIER", "Your parcel destination now at " +updatedParcel.getDestination());
-//	            }
+	            if(updatedParcel != null) {
+	            	emailService.sendEmail("ryanucheka@gmail.com", "UPDATES FROM SENDIT COURIER", "Parcel currently at  " +updatedParcel.getDestination());
+	            }
 	            return updatedParcel;
 	        } else {
 	        	throw new ParcelNotFoundException("Parcel to change destination doen not exist");
@@ -185,11 +194,6 @@ public List<Parcel> getParcelsByUserId(long userId) throws UserNotFoundException
 		}catch(Exception exc) {
 			throw new Exception(exc.getMessage());
 		}
-		
-	}
-
-	public void deleteAllParcels() {
-		repository.deleteAll();
 		
 	}
 }
