@@ -171,7 +171,6 @@ public List<Parcel> getParcelsByUserId(long userId) throws UserNotFoundException
 		//Fetch the parcel with particular Id
 		Optional<Parcel> parcel = repository.findById(parcelId);
 		//Check if parcel exist
-		try {
 			if(parcel.isPresent()) 
 	        {
 	            Parcel updatedParcel = parcel.get();
@@ -189,9 +188,7 @@ public List<Parcel> getParcelsByUserId(long userId) throws UserNotFoundException
 	        	throw new ParcelNotFoundException("Parcel to change destination doen not exist");
 	        }
 			
-		}catch(Exception exc) {
-			throw new Exception(exc.getMessage());
-		}
+		
 		
 	}
 }
