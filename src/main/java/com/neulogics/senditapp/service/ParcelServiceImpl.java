@@ -179,6 +179,7 @@ public List<Parcel> getParcelsByUserId(long userId) throws UserNotFoundException
 	            }
 	            // Update the parcel destination
 	            updatedParcel.setDestination(parcelForUpdate.getDestination());
+	            updatedParcel.setPresentLocation(parcelForUpdate.getDestination());
 	            updatedParcel = repository.save(updatedParcel);
 	            if(updatedParcel != null) {
 	            	emailService.sendEmail("ryanucheka@gmail.com", "UPDATES FROM SENDIT COURIER", "Parcel currently at  " +updatedParcel.getDestination());
