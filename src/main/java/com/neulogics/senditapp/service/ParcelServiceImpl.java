@@ -99,7 +99,7 @@ public List<Parcel> getParcelsByUserId(long userId) throws UserNotFoundException
 		
 		public Parcel updateParcelStatus(Parcel parcelForUpdate,long parcelId) throws SendFailedException,ActionNotAllowedException,Exception{
 			Parcel parcel = repository.findById(parcelId)
-					.orElseThrow(()->new ParcelNotFoundException("Parcel to cancel not found!!"));
+					.orElseThrow(()->new ParcelNotFoundException("Parcel to update not found!!"));
 			if("delivered".equalsIgnoreCase(parcel.getStatus())) {
 				throw new ActionNotAllowedException("Cannot changed status of parcel already delivered");
 			}
