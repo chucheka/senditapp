@@ -145,8 +145,8 @@ public List<Parcel> getParcelsByUserId(long userId) throws UserNotFoundException
 	
 	// PUT/api/v1/parcels/{parcelId}present_location
 		
-	public Parcel updateParcelLocation(Parcel parcelForUpdate,long parcelId) throws ParcelNotFoundException,Exception{
-		try {
+	public Parcel updateParcelLocation(Parcel parcelForUpdate,long parcelId) throws ParcelNotFoundException{
+		
 			//Fetch the parcel with particular Id
 			Optional<Parcel> parcel = repository.findById(parcelId);
 			//Check if parcel exist
@@ -159,9 +159,7 @@ public List<Parcel> getParcelsByUserId(long userId) throws UserNotFoundException
 	        } else {
 	        	throw new ParcelNotFoundException("Parcel to change location doen not exist");
 	        }
-		}catch(Exception exc) {
-			throw new Exception("Internal Server Error \n"+exc.getCause());
-		}
+		
 		
 	}
 	
