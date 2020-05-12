@@ -33,9 +33,9 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+//@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SenditappApplicationTests {
 
 	// *******Before your run test first create two users in the database,one admin user and a normal user
