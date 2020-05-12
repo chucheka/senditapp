@@ -59,7 +59,7 @@ class SenditappApplicationTests {
 	public void authorization() throws JSONException {
 		
 		
-		RestAssured.baseURI = "http://localhost:8081/api/v1";
+		RestAssured.baseURI = "https://mysenditapp.herokuapp.com/api/v1";
 
 
 		String[] adminList= {"admin","user"};
