@@ -50,7 +50,7 @@ public class ParcelController {
 	}
 
 	@PutMapping("/parcels/{parcelId}/destination")
-	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseStatus(HttpStatus.OK)
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public Parcel updateParcelDestination(@RequestBody Parcel parcel,@PathVariable("parcelId") Long parcelId) throws Exception {
 		return service.updateParcelDestination(parcel, parcelId);
@@ -63,15 +63,11 @@ public class ParcelController {
 	}
 	//CREATE PARCEL ORDER
 	@PostMapping("/parcels")
+	@ResponseStatus(HttpStatus.CREATED)
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public ResponseEntity<Parcel> createParcelOrder(@Valid @RequestBody Parcel newParcel,HttpServletRequest req) {
-		
-		try {
+	public ResponseEntity<Parcel> createParcelOrder(@Valid @RequestBody Parcel newParcel,HttpServletRequest req) throws Exception {
 			Parcel parcel = service.createParcelOrder(newParcel, req);
 			return new ResponseEntity<Parcel>(parcel,HttpStatus.CREATED);
-		}catch(Exception exc) {
-			return new ResponseEntity<>(null,HttpStatus.EXPECTATION_FAILED);
-		}
 	}
 	
 	@GetMapping("/parcels")
@@ -79,8 +75,7 @@ public class ParcelController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public List<Parcel> getAllParcels() throws Exception{
 		List<Parcel> parcels = service.getAllParcels();
-		System.out.println(parcels);
-	return parcels;
+		return parcels;
 	}
 	
 	@GetMapping("/parcels/{parcelId}")

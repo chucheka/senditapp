@@ -132,7 +132,7 @@ public List<Parcel> getParcelsByUserId(long userId) throws UserNotFoundException
 		}
 			
 			if("delivered".equals(dbParcel.getStatus())) {
-				throw new ActionNotAllowedException("Can not cancel parcel order that has been delivered");
+				throw new ActionNotAllowedException("Parcel has already been delivered");
 			}else {
 				
 				try {
