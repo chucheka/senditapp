@@ -17,7 +17,8 @@ public class MyPostConstructBean {
 	@PostConstruct
 	  void postConstruct(){
 	   roleRepo.save(new Role(ERole.ROLE_USER));
-	   roleRepo.save(new Role(ERole.ROLE_ADMIN));   
+	   roleRepo.save(new Role(ERole.ROLE_ADMIN));
+	   roleRepo.save(new Role(ERole.ROLE_RIDER));
 	  }
 
 }
