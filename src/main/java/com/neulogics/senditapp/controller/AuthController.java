@@ -62,7 +62,7 @@ public class AuthController {
 		String jwt = jwtUtils.generateJwtToken(authentication);
 		
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();	
-		System.out.println(userDetails);
+		System.out.println("the user deatils>>>>>"+userDetails.toString());
 		List<String> roles = userDetails.getAuthorities().stream()
 				.map(item -> item.getAuthority())
 				.collect(Collectors.toList());
@@ -112,7 +112,6 @@ public class AuthController {
 					Role riderRole = roleRepository.findByName(ERole.ROLE_RIDER)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 					roles.add(riderRole);
-
 					break;
 				default:
 					Role userRole = roleRepository.findByName(ERole.ROLE_USER)
