@@ -33,12 +33,10 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 
 
-//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-//@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SenditappApplicationTests {
-
-	// *******Before your run test first create two users in the database,one admin user and a normal user
 	
 	String adminToken;
 	
@@ -77,8 +75,7 @@ class SenditappApplicationTests {
 		adminUserJSON.put("password", "john22doe");
 		adminUserJSON.put("email", "johndoe@gmail.com");
 		adminUserJSON.put("roles",adminRoles);
-		System.out.println(adminUserJSON);
-		System.out.println(adminRoles);
+
 
 		JSONObject normalUserJSON = new JSONObject();
 		normalUserJSON.put("username", "Wilson Achiver");
@@ -143,8 +140,6 @@ class SenditappApplicationTests {
 				.addHeader("Authorization", "Bearer "+adminToken);
 
 		requestSpec =  builder.build();
-
-		
 
 		
 		// Login another user and return token
